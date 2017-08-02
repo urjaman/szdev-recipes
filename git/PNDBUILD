@@ -1,0 +1,22 @@
+pkgname=git
+pkgver=2.13.3
+pkgrel=2
+pkgdesc="the fast distributed version control system"
+url="http://git-scm.com/"
+license=('GPL2')
+source=("https://www.kernel.org/pub/software/scm/git/git-$pkgver.tar.xz")
+sha256sums=('91aa23be428f67eb19616f43fa0229d567e9acf4f08fba33eb0b627e4d323e62')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make prefix=/usr CC="$CC" all html
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make prefix=/usr CC="$CC" DESTDIR="$pkgdir" install install-html
+
+  # bash completion
+  mkdir -p "$pkgdir"/usr/share/bash-completion/completions/
+  install -m644 ./contrib/completion/git-completion.bash "$pkgdir"/usr/share/bash-completion/completions/git
+}

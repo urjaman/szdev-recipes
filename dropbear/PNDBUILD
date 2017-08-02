@@ -1,0 +1,32 @@
+pkgname=dropbear
+pkgver=2017.75
+pkgrel=1
+pkgdesc="Lightweight replacement for sshd"
+url="http://matt.ucc.asn.au/dropbear/dropbear.html"
+license=('MIT')
+source=(https://matt.ucc.asn.au/$pkgname/releases/$pkgname-$pkgver.tar.bz2
+	dropbear.init
+	dropbear.default)
+sha256sums=('6cbc1dcb1c9709d226dff669e5604172a18cf5dbf9a201474d5618ae4465098c'
+		SKIP SKIP )
+
+build() {
+  cd $pkgname-$pkgver
+
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+
+  make install DESTDIR="${pkgdir}/"
+
+  # Configuration files
+  install -d "${pkgdir}/etc/$pkgname"
+  
+  install -D -m755 ../dropbear.init "${pkgdir}/etc/init.d/dropbear"
+  install -D -m644 ../dropbear.default "${pkgdir}/etc/default/dropbear"
+
+}
+

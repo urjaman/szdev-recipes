@@ -1,0 +1,51 @@
+pkgname=bash
+_basever=4.4
+_patchlevel=012
+pkgver=${_basever}.${_patchlevel}
+pkgrel=2
+pkgdesc='The GNU Bourne Again shell'
+license=('GPL')
+url='http://www.gnu.org/software/bash/bash.html'
+source=(https://ftp.gnu.org/gnu/bash/bash-$_basever.tar.gz)
+
+if [[ $((10#${_patchlevel})) -gt 0 ]]; then
+  for (( _p=1; _p<=$((10#${_patchlevel})); _p++ )); do
+    source=(${source[@]} https://ftp.gnu.org/gnu/bash/bash-$_basever-patches/bash${_basever//.}-$(printf "%03d" $_p))
+  done
+fi
+
+prepare() {
+  cd $pkgname-$_basever
+
+  for (( _p=1; _p<=$((10#${_patchlevel})); _p++ )); do
+    msg "applying patch bash${_basever//.}-$(printf "%03d" $_p)"
+    patch -p0 -i ../bash${_basever//.}-$(printf "%03d" $_p)
+  done
+}
+
+build() {
+  cd $pkgname-$_basever
+  export LDFLAGS="$LDFLAGS -ltinfo"
+  ./configure --prefix=/usr --bindir=/bin --with-curses
+  make
+}
+
+
+package() {
+  make -C $pkgname-$_basever DESTDIR="$pkgdir" install
+}
+
+md5sums=('148888a7c95ac23705559b6f477dfe25'
+         '817d01a6c0af6f79308a8b7b649e53d8'
+         '765e14cff12c7284009772e8e24f2fe0'
+         '49e7da93bf07f510a2eb6bb43ac3e5a2'
+         '4557d674ab5831a5fa98052ab19edaf4'
+         'cce96dd77cdd1d293beec10848f6cbb5'
+         'd3379f8d8abce5c6ee338f931ad008d5'
+         'ec38c76ca439ca7f9c178e9baede84fc'
+         'e0ba18c1e3b94f905da9b5bf9d38b58b'
+         'e952d4f44e612048930c559d90eb99bb'
+         '57b5b35955d68f9a09dbef6b86d2c782'
+         'cc896e1fa696b93ded568e557e2392d5'
+         'fa47fbfa56fb7e9e5367f19a9df5fc9e')
+

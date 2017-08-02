@@ -1,0 +1,51 @@
+pkgname=binutils
+pkgver=2.28.0
+pkgrel=5
+_commit=09e514a92b6bb7c910051a7fafc9fded8a687848
+pkgdesc="A set of programs to assemble and manipulate binary and object files"
+url="http://www.gnu.org/software/binutils/"
+license=('GPL')
+depends=('libz1')
+makedepends=('git')
+options=('staticlibs' '!distcc' '!ccache')
+provides=('binutils-symlinks')
+conflicts=('binutils-symlinks')
+source=(git+https://sourceware.org/git/binutils-gdb.git#commit=${_commit})
+md5sums=('SKIP')
+
+prepare() {
+  cd binutils-gdb
+
+  # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
+
+  mkdir ${srcdir}/binutils-build
+}
+
+build() {
+  cd binutils-build
+
+  ../binutils-gdb/configure \
+    --prefix=/usr \
+    --enable-threads \
+    --enable-shared \
+    --enable-ld=default \
+    --enable-gold \
+    --enable-plugins \
+    --enable-relro \
+    --with-pic \
+    --disable-werror \
+    --disable-gdb
+
+  # check the host environment and makes sure all the necessary tools are available
+  make configure-host
+  make tooldir=/Usr
+}
+
+package() {
+  cd binutils-build
+  make prefix=${pkgdir}/usr tooldir=${pkgdir}/usr install
+
+  # Remove unwanted files
+  rm ${pkgdir}/usr/share/man/man1/{dlltool,nlmconv,windres,windmc}*
+}

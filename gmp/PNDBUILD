@@ -1,0 +1,21 @@
+pkgname=gmp
+pkgver=4.3.2
+pkgrel=1
+pkgdesc="A free library for arbitrary precision arithmetic"
+url="http://gmplib.org/"
+license=('LGPL3')
+options=(!libtool)
+source=(ftp://ftp.gnu.org/gnu/gmp/gmp-${pkgver}.tar.bz2)
+md5sums=('dd60683d7057917e34630b4a787932e8')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure \
+    --prefix=/usr --infodir=/usr/share/info \
+    --enable-cxx || return 1
+  make || return 1
+  make DESTDIR="${pkgdir}" install || return 1
+  cd "${pkgdir}/usr/share/info"
+  rm -f dir
+  gzip * || return 1
+}

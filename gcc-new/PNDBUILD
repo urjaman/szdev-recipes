@@ -1,0 +1,78 @@
+pkgname=gcc-new
+pkgver=7.1.1
+_pkgver=${pkgver:0:1}
+_islver=0.18
+pkgrel=4
+_commit=d791474f3fc2133fa0c310e566988b0cbdff321e
+pkgdesc="The GNU Compiler Collection"
+license=('GPL' 'LGPL' 'FDL' 'custom')
+url="http://gcc.gnu.org"
+makedepends=('binutils' 'git')
+options=('!emptydirs')
+source=(git+https://gcc.gnu.org/git/gcc.git#commit=${_commit}
+        http://isl.gforge.inria.fr/isl-${_islver}.tar.bz2)
+md5sums=('SKIP'
+         '11436d6b205e516635b666090b94ab32')
+
+
+prepare() {
+  cd ${srcdir}/gcc
+
+  # link isl for in-tree build
+  ln -s ../isl-${_islver} isl
+
+  # Do not run fixincludes
+  sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
+
+  # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
+
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=80717
+  # git apply ../Revert-eeb6872bf.patch
+
+  mkdir ${srcdir}/gcc-build
+}
+
+build() {
+  cd ${srcdir}/gcc-build
+
+  # using -pipe causes spurious test-suite failures
+  # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=48565
+  CFLAGS=${CFLAGS/-pipe/}
+  CXXFLAGS=${CXXFLAGS/-pipe/}
+
+  ${srcdir}/gcc/configure --prefix=/usr/ngcc \
+      --enable-languages=c,c++ \
+      --enable-shared \
+      --enable-threads=posix \
+      --with-system-zlib \
+      --with-isl \
+      --enable-__cxa_atexit \
+      --disable-libunwind-exceptions \
+      --enable-clocale=gnu \
+      --disable-libstdcxx-pch \
+      --disable-libssp \
+      --enable-gnu-unique-object \
+      --enable-linker-build-id \
+      --enable-lto \
+      --enable-plugin \
+      --enable-install-libiberty \
+      --with-linker-hash-style=gnu \
+      --enable-gnu-indirect-function \
+      --disable-multilib \
+      --disable-werror \
+      --enable-checking=release \
+      --enable-default-pie \
+      --enable-default-ssp
+  make
+}
+
+package()
+{
+  pkgdesc="Runtime libraries shipped by GCC"
+  options=('!emptydirs' '!strip')
+
+  cd ${srcdir}/gcc-build
+  make DESTDIR=${pkgdir} install
+}
+

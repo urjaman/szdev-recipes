@@ -1,0 +1,16 @@
+pkgname=opkg-utils
+pkgver=0.3.5
+pkgrel=1
+pkgdesc="Helper scripts for use with the opkg package manager"
+license=('GPL2')
+source=('git+git://git.yoctoproject.org/opkg-utils#tag=0.3.5')
+md5sums=('SKIP')
+
+package() {
+  cd ${pkgname}
+  touch opkg-build.1
+  make DESTDIR=${pkgdir} PREFIX=/usr install
+  rm -r ${pkgdir}/usr/man
+  rm ${pkgdir}/usr/bin/update-alternatives
+}
+
