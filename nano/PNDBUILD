@@ -1,0 +1,26 @@
+pkgname=nano
+pkgver=2.8.6
+pkgrel=1
+pkgdesc="Pico editor clone with enhancements"
+license=('GPL')
+url="http://www.nano-editor.org"
+depends=('ncurses6')
+source=(https://www.nano-editor.org/dist/v2.8/${pkgname}-${pkgver}.tar.gz)
+sha256sums=('3725aa145880223b2c4d0b3fa08220e1633f2d341917f49d028e067fc12cce49')
+
+build() {
+  cd ${pkgname}-${pkgver}
+  ./configure --prefix=/usr \
+    --sysconfdir=/etc \
+    --enable-color \
+    --enable-nanorc \
+    --enable-multibuffer \
+    --disable-wrapping-as-root
+  make
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+  install -D doc/sample.nanorc ${pkgdir}/usr/share/doc/nano
+}

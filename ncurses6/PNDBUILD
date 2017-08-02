@@ -1,0 +1,40 @@
+pkgname=ncurses6
+_pkgver=6.0-20170527
+pkgver=${_pkgver/-/+}
+pkgrel=1
+pkgdesc='System V Release 4.0 curses emulation library'
+url='http://invisible-island.net/ncurses/ncurses.html'
+license=('MIT')
+conflicts=('ncurses-dev' 'ncurses-tools')
+provides=('ncurses-dev' 'ncurses-tools')
+source=(http://invisible-mirror.net/archives/ncurses/current/ncurses-${_pkgver}.tgz)
+md5sums=('c0e32e50ed6fd81af7ecc4910de9fa3f')
+
+build() {
+  cd ncurses-${_pkgver}
+
+  ./configure --prefix=/usr --mandir=/usr/share/man \
+    --with-pkg-config-libdir=/usr/lib/pkgconfig \
+    --with-shared --with-normal --without-debug --without-ada \
+    --enable-widec --enable-pc-files --with-cxx-binding --with-cxx-shared
+  make
+}
+
+package() {
+  cd ncurses-${_pkgver}
+  make DESTDIR="$pkgdir" install
+
+  # fool packages looking to link to non-wide-character ncurses libraries
+  for lib in ncurses ncurses++ form panel menu; do
+    echo "INPUT(-l${lib}w)" > "$pkgdir"/usr/lib/lib${lib}.so
+    ln -s ${lib}w.pc "$pkgdir"/usr/lib/pkgconfig/${lib}.pc
+  done
+
+  # some packages look for -lcurses during build
+  echo "INPUT(-lncursesw)" > "$pkgdir"/usr/lib/libcursesw.so
+  ln -s libncurses.so "$pkgdir"/usr/lib/libcurses.so
+
+  # install license, rip it from the readme
+  install -d "$pkgdir"/usr/share/licenses/$pkgname
+  grep -B 100 '$Id' README > "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}

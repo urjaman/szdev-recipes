@@ -1,0 +1,66 @@
+# This is a run-compat pandora-style ncurses (ABI version 5, and -ltinfo).
+pkgname=ncurses
+_pkgver=5.9
+# This is so opkg know to upgrade to this version, hopefully
+pkgver=${_pkgver}9
+pkgrel=1
+pkgdesc='System V Release 4.0 curses emulation library'
+url='http://invisible-island.net/ncurses/ncurses.html'
+license=('MIT')
+source=(ftp://invisible-island.net/ncurses/ncurses-${_pkgver/_/-}.tar.gz
+	new_gcc_patch)
+md5sums=('8cb9c412e5f2d96bc6f459aa8c6282a1'
+         'fd12252672685658f8ca479ab7dfbd89')
+
+prepare() {
+  cd $pkgname-${_pkgver}
+  patch -Np1 < ../new_gcc_patch
+}
+
+build() {
+  cd $pkgname-${_pkgver}
+
+  DEFAULTS="--prefix=/usr
+            --disable-static \
+            --without-debug \
+            --without-ada \
+            --without-gpm \
+                        --enable-hard-tabs \
+                        --enable-xmc-glitch \
+                        --enable-colorfgbg \
+                        --with-termpath=/etc/termcap:/usr/share/misc/termcap \
+                        --with-terminfo-dirs=/etc/terminfo:/usr/share/terminfo \
+                        --with-shared \
+                        --disable-big-core \
+                        --program-prefix= \
+                        --with-ticlib \
+                        --with-termlib=tinfo \
+                        --enable-sigwinch \
+                        --disable-rpath-hack \
+			--without-progs"
+
+  mkdir -p narrowc; cd narrowc
+  ../configure $DEFAULTS
+  cd ..
+
+  mkdir -p widec; cd widec
+  ../configure $DEFAULTS --enable-widec
+  cd ..
+
+  make -C narrowc libs
+  make -C widec libs
+}
+
+package() {
+  cd $pkgname-${_pkgver}
+  make -C narrowc DESTDIR="$pkgdir" install
+  make -C widec DESTDIR="$pkgdir" install
+  # we provide ABI-compat-only, so eg. the terminfo database is by ncurses6
+  rm -r ${pkgdir}/usr/bin
+  rm -r ${pkgdir}/usr/man
+  rm -r ${pkgdir}/usr/include
+  rm -r ${pkgdir}/usr/share
+  rm ${pkgdir}/usr/lib/*.so
+  rm ${pkgdir}/usr/lib/*.a
+  rm ${pkgdir}/usr/lib/terminfo
+}
