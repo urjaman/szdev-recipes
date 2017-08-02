@@ -1,0 +1,35 @@
+# run-only compat for the libmpfr1 provided in the pandora OS
+pkgname=libmpfr1
+pkgver=2.4.2
+pkgrel=3
+pkgdesc="Multiple-precision floating-point library"
+license=('LGPL')
+url="http://www.mpfr.org/"
+depends=('libgmp3')
+options=('!libtool')
+provides=('libmpfr-dev')
+conflicts=('libmpfr-dev')
+source=(http://www.mpfr.org/mpfr-2.4.2/mpfr-2.4.2.tar.bz2
+	http://www.mpfr.org/mpfr-2.4.2/allpatches)
+md5sums=('89e59fe665e2b3ad44a6789f40b059a0'
+	 '9f81d0b7fea489b72d0e4125fd8c466a')
+
+prepare() {
+  cd "${srcdir}/mpfr-${pkgver}"
+  patch -N -Z -p1 < "${srcdir}/allpatches"
+}
+
+build() {
+  cd "${srcdir}/mpfr-${pkgver}"
+  ./configure --prefix=/usr --enable-thread-safe --enable-shared --disable-static || return 1
+  make || return 1
+}
+
+package() {
+  cd "${srcdir}/mpfr-${pkgver}"
+  make DESTDIR="${pkgdir}" install || return 1
+  # this is a run-only compat ipk, remove everything that'd clash with newer stuff
+  rm "${pkgdir}/usr/lib/libmpfr.so"
+  rm -r "${pkgdir}/usr/include"
+  rm -r "${pkgdir}/usr/share" 
+}
