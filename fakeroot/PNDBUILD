@@ -1,0 +1,25 @@
+pkgname=fakeroot
+pkgver=1.21
+pkgrel=2
+pkgdesc='Tool for simulating superuser privileges'
+license=('GPL')
+depends=('libcap')
+url="http://packages.debian.org/fakeroot"
+source=(http://ftp.debian.org/debian/pool/main/f/$pkgname/${pkgname}_${pkgver}.orig.tar.gz)
+md5sums=('be5c9a0e516869fca4a6758105968e5a')
+
+build() {
+  cd $pkgname-$pkgver
+  ./bootstrap
+  ./configure --prefix=/usr \
+    --disable-static \
+    --with-ipc=sysv
+
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+  make SUBDIRS=scripts DESTDIR="$pkgdir" install
+}
+

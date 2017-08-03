@@ -1,0 +1,20 @@
+pkgname=libcap
+pkgver=2.20
+pkgrel=1
+pkgdesc="POSIX 1003.1e capabilities"
+url="http://www.kernel.org/pub/linux/libs/security/linux-privs/"
+license=('GPL')
+source=(https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/${pkgname}-${pkgver}.tar.gz)
+md5sums=('4870d766be905d61256710c05cbb36d3')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make prefix=/usr DESTDIR=${pkgdir} LIBDIR=${pkgdir}/lib RAISE_SETFCAP=no install
+  rm ${pkgdir}/lib/*.a
+  chmod 755 ${pkgdir}/lib/libcap.so.${pkgver}
+}
