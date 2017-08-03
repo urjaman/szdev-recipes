@@ -1,5 +1,5 @@
 # This is a run-compat pandora-style ncurses (ABI version 5, and -ltinfo).
-pkgname=ncurses
+pkgname=('ncurses' 'ncurses-dev')
 _pkgver=5.9
 # This is so opkg know to upgrade to this version, hopefully
 pkgver=${_pkgver}9
@@ -51,7 +51,7 @@ build() {
   make -C widec libs
 }
 
-package() {
+package_ncurses() {
   cd $pkgname-${_pkgver}
   make -C narrowc DESTDIR="$pkgdir" install
   make -C widec DESTDIR="$pkgdir" install
@@ -63,4 +63,10 @@ package() {
   rm ${pkgdir}/usr/lib/*.so
   rm ${pkgdir}/usr/lib/*.a
   rm ${pkgdir}/usr/lib/terminfo
+}
+
+package_ncurses-dev() {
+  echo "ncurses-dev is purposefully blank"
+  mkdir -p ${pkgdir}/var/lib/misc
+  touch ${pkgdir}/var/lib/misc/.pkg-$pkgname-is-blank
 }
