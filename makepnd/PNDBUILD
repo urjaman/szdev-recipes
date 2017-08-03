@@ -1,0 +1,22 @@
+# Maintainer: Jari Vetoniemi <mailRoxas@gmail.com>
+
+pkgname=makepnd
+pkgver=1.0.0
+pkgrel=2
+pkgdesc='Scripts for creating PND packages from recipe'
+url='https://github.com/Cloudef/makepnd'
+license=('GPL')
+source=('git+git://github.com/Cloudef/makepnd.git')
+
+build() {
+  cd makepnd
+  cmake -DCMAKE_INSTALL_PREFIX=/usr .
+  make
+}
+
+package() {
+  cd makepnd
+  make DESTDIR=${pkgdir} install
+}
+
+md5sums=('SKIP')
