@@ -22,7 +22,7 @@ prepare() {
   # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
 
-  mkdir ${srcdir}/gcc-build
+  mkdir -p ${srcdir}/gcc-build
 }
 
 build() {
@@ -66,7 +66,11 @@ package()
   cd ${srcdir}/gcc-build
   make DESTDIR=${pkgdir} install
   # link the libstdc++ to the normal tree too so you always link to it by default
-  LIB=$(basename "${pkgdir}/usr/ngcc/lib/libstdc++.so.6.0.*")
-  ln "${pkgdir}/usr/ngcc/lib/$LIB" "${pkgdir}/usr/lib/$LIB"
+  mkdir -p "${pkgdir}/usr/lib"
+  ln "${pkgdir}/usr/ngcc/lib/libstdc++.so.6.0.24" "${pkgdir}/usr/lib/libstdc++.so.6.0.24"
+  # Do strip some things anyways...
+  set +f 
+  shopt -u extglob
+  strip --strip-unneeded ${pkgdir}/usr/ngcc/libexec/gcc/*/*/{cc1,cc1plus,lto1}  ${pkgdir}/usr/ngcc/bin/*
 }
 
