@@ -1,8 +1,8 @@
 # Maintainer: Jari Vetoniemi <mailRoxas@gmail.com>
 
 pkgname=makepnd
-pkgver=1.0.0
-pkgrel=2
+pkgver=r28.c9d679e
+pkgrel=1
 pkgdesc='Scripts for creating PND packages from recipe'
 url='https://github.com/Cloudef/makepnd'
 license=('GPL')
@@ -13,6 +13,10 @@ depends=('bash' 'libarchive' 'fakeroot' 'gawk'
          'ncurses' 'xz' 'binutils' 'ldd' 'squashfs-tools'
          'libxml2-utils')
 
+pkgver() {
+  cd makepnd
+  printf 'r%s.%s' "$(git rev-list --count HEAD)" "$(git describe --always)"
+}
 
 build() {
   cd makepnd
