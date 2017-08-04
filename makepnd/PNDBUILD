@@ -7,6 +7,12 @@ pkgdesc='Scripts for creating PND packages from recipe'
 url='https://github.com/Cloudef/makepnd'
 license=('GPL')
 source=('git+git://github.com/Cloudef/makepnd.git')
+depends=('bash' 'libarchive' 'fakeroot' 'gawk'
+         'bzip2' 'coreutils' 'file' 'findutils'
+         'gettext' 'grep' 'gzip' 'openssl' 'sed'
+         'ncurses' 'xz' 'binutils' 'ldd' 'squashfs-tools'
+         'libxml2-utils')
+
 
 build() {
   cd makepnd
