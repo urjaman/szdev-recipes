@@ -1,0 +1,21 @@
+pkgname=sed
+pkgver=4.4
+pkgrel=1
+pkgdesc='GNU stream editor'
+url='https://www.gnu.org/software/sed/'
+license=('GPL3')
+source=("https://ftp.gnu.org/pub/gnu/sed/$pkgname-$pkgver.tar.xz")
+md5sums=('e0c583d4c380059abd818cd540fe6938')
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
+  mkdir -p "$pkgdir/bin"
+  ln "$pkgdir/usr/bin/sed" "$pkgdir/bin/sed.sed"
+}
