@@ -1,0 +1,21 @@
+pkgname=asciidoc
+pkgver=8.6.9
+pkgrel=3
+pkgdesc='Text document format for short documents, articles, books and UNIX man pages.'
+url='http://www.methods.co.nz/asciidoc/'
+license=('GPL')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('c59018f105be8d022714b826b0be130a')
+
+build() {
+  cd ${pkgname}-${pkgver}
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  make install DESTDIR=${pkgdir}
+}
+
