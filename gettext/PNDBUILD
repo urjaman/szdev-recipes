@@ -1,6 +1,6 @@
-pkgname=gettext
+pkgname=('gettext' 'gettext-dev')
 pkgver=0.19.8.1
-pkgrel=2
+pkgrel=3
 pkgdesc="GNU internationalization library"
 url="http://www.gnu.org/software/gettext/"
 license=('GPL')
@@ -13,8 +13,15 @@ build() {
   make
 }
 
-package() {
+package_gettext() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   make DESTDIR="${pkgdir}" install
 }
+
+package_gettext-dev() {
+  echo "$pgkname is purposefully blank"
+  mkdir -p ${pkgdir}/var/lib/misc
+  touch ${pkgdir}/var/lib/misc/.pkg-$pkgname-is-blank
+}
+
 md5sums=('97e034cf8ce5ba73a28ff6c3c0638092')
