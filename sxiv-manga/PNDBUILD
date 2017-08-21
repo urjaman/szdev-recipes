@@ -1,0 +1,52 @@
+_pkgname=sxiv
+pkgname=$_pkgname-manga
+pkgver=20141024.480
+pkgrel=1
+pkgdesc="Simple (or small or suckless) X Image Viewer"
+arch=('i686' 'x86_64')
+url="https://github.com/muennich/sxiv"
+license=('GPL2')
+depends=('libimlib2-1' 'libimlib2-loaders' 'desktop-file-utils')
+makedepends=('git' 'libimlib2-dev')
+optdepends=(
+'imagemagick: for the example commands in config.def.h'
+'libjpeg-turbo: for the example commands in config.def.h'
+'gimp: for the example commands in config.def.h'
+)
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+install=$pkgname.install
+source=("$_pkgname::git+https://github.com/Cloudef/sxiv.git#branch=manga-personal")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/$_pkgname"
+  echo "$(git log -1 --format="%cd" --date=short | sed 's|-||g').$(git rev-list --count master)"
+}
+
+prepare() {
+  cd "$srcdir/$_pkgname"
+
+  # Allow custom FLAGS
+  sed -i Makefile -e 's|^CFLAGS\s*=|CFLAGS +=|' -e 's|^LDFLAGS\s*=|LDFLAGS +=|'
+
+  # custom config
+  if [[ -e "$startdir/config.h" ]]; then
+    msg "using custom config.h";
+    cp "$startdir/config.h" .
+  fi
+}
+
+build() {
+  cd "$srcdir/$_pkgname"
+  export CFLAGS="$CFLAGS $CPPFLAGS"
+  make PREFIX="/usr"
+}
+
+package() {
+  cd "$srcdir/$_pkgname"
+  make PREFIX="/usr" DESTDIR="$pkgdir" install
+  install -Dm644 sxiv.desktop "$pkgdir/usr/share/applications/sxiv.desktop"
+}
+
+# vim:set ts=2 sw=2 et: 
