@@ -1,7 +1,7 @@
 pkgname=binutils
-pkgver=2.28.0
-pkgrel=5
-_commit=09e514a92b6bb7c910051a7fafc9fded8a687848
+pkgver=2.29.0
+pkgrel=1
+_commit=dd9a28c0966d13924fbd1096a724ae334954d830
 pkgdesc="A set of programs to assemble and manipulate binary and object files"
 url="http://www.gnu.org/software/binutils/"
 license=('GPL')
@@ -19,7 +19,7 @@ prepare() {
   # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
 
-  mkdir ${srcdir}/binutils-build
+  mkdir -p ${srcdir}/binutils-build
 }
 
 build() {
@@ -47,5 +47,10 @@ package() {
   make prefix=${pkgdir}/usr tooldir=${pkgdir}/usr install
 
   # Remove unwanted files
-  rm ${pkgdir}/usr/share/man/man1/{dlltool,nlmconv,windres,windmc}*
+  rm -f ${pkgdir}/usr/share/man/man1/{dlltool,nlmconv,windres,windmc}*
+
+  # No shared linking to these files outside binutils
+  rm -f "$pkgdir"/usr/lib/lib{bfd,opcodes}.so
+  echo "INPUT( /usr/lib/libbfd.a -liberty -lz -ldl )" > "$pkgdir/usr/lib/libbfd.so"
+  echo "INPUT( /usr/lib/libopcodes.a -lbfd )" > "$pkgdir/usr/lib/libopcodes.so"
 }
