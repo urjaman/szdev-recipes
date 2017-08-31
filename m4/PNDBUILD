@@ -1,14 +1,18 @@
 pkgname=m4
 pkgver=1.4.18
-pkgrel=1
+pkgrel=3
 pkgdesc="The GNU macro processor"
 url="http://www.gnu.org/software/m4"
 license=('GPL3')
 source=(ftp://ftp.gnu.org/gnu/m4/$pkgname-$pkgver.tar.xz)
 md5sums=('730bb15d96fffe47e148d1e09235af82')
+#md5sums=('12a3c829301a4fd6586a57d3fcf196dc')
 
 build() {
   cd $pkgname-$pkgver  
+  # override test as the eglibc strstr seems bad (detected by autoconf)
+  # but m4 thinks its good. remove this after eglibc update, if ever.
+  export gl_cv_func_strstr_works_always=no
   ./configure --prefix=/usr
   make
 }
