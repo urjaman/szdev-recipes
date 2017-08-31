@@ -3,6 +3,8 @@ set -e
 shopt -s nullglob
 
 do_build() {
+	# clean the trees before trying a build
+	rm -rf pkg src
 	makepnd --config ../autobuild-makepnd.conf
 	if [ $(echo *.ipk | wc -w) -eq 0 ]; then
 		echo "No .ipk generated?"
