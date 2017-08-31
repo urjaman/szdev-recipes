@@ -2,7 +2,7 @@ pkgname=bash
 _basever=4.4
 _patchlevel=012
 pkgver=${_basever}.${_patchlevel}
-pkgrel=2
+pkgrel=3
 pkgdesc='The GNU Bourne Again shell'
 license=('GPL')
 url='http://www.gnu.org/software/bash/bash.html'
@@ -25,7 +25,6 @@ prepare() {
 
 build() {
   cd $pkgname-$_basever
-  export LDFLAGS="$LDFLAGS -ltinfo"
   ./configure --prefix=/usr --bindir=/bin --with-curses
   make
 }
