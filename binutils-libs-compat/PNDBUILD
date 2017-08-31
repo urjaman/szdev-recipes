@@ -1,0 +1,18 @@
+pkgname=binutils-libs-compat
+pkgver=2.21
+pkgrel=1
+pkgdesc="Old binutils libraries that things might have linked against"
+url="http://www.gnu.org/software/binutils/"
+license=('GPL')
+source=(http://openpandora.org/feeds/unstable/armv7a/binutils_2.21.1a-r1.3.5_armv7a.ipk)
+md5sums=('d6c04a220b6265e5ca2c6fcdc9cdde95')
+noextract=("${source[@]##*/}")
+
+build() {
+	ar p binutils_2.21.1a-r1.3.5_armv7a.ipk data.tar.gz | tar xz
+}
+
+package() {
+	mkdir -p ${pkgdir}/usr/lib
+	cp -a ${srcdir}/usr/lib/* ${pkgdir}/usr/lib/
+}
