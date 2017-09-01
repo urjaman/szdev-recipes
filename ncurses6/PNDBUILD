@@ -1,14 +1,14 @@
 pkgname=ncurses6
-_pkgver=6.0-20170527
+_pkgver=6.0-20170827
 pkgver=${_pkgver/-/+}
-pkgrel=2
+pkgrel=1
 pkgdesc='System V Release 4.0 curses emulation library'
 url='http://invisible-island.net/ncurses/ncurses.html'
 license=('MIT')
-conflicts=('ncurses_dev<5.99' 'ncurses-tools')
+conflicts=('ncurses-dev<5.99' 'ncurses-tools')
 provides=('ncurses-dev' 'ncurses-tools')
 source=(http://invisible-mirror.net/archives/ncurses/current/ncurses-${_pkgver}.tgz)
-md5sums=('c0e32e50ed6fd81af7ecc4910de9fa3f')
+md5sums=('08fdc01a498f19ee75d8638c5504cdb1')
 
 build() {
   cd ncurses-${_pkgver}
