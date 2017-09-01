@@ -1,0 +1,12 @@
+*/pkg/
+*/src/
+*/*.ipk
+*/*.tar.*
+*/*.tgz
+bash/bash4*
+feed/Packages*
+mpfr1-compat/allpatches
+makepnd/makepnd/
+binutils/binutils-gdb/
+opkg-utils/opkg-utils/
+gcc-new/gcc/
