@@ -3,23 +3,26 @@ pkgname=('ncurses' 'ncurses-dev')
 _pkgver=5.9
 # This is so opkg know to upgrade to this version, hopefully
 pkgver=${_pkgver}9
-pkgrel=1
+pkgrel=2
 pkgdesc='System V Release 4.0 curses emulation library'
 url='http://invisible-island.net/ncurses/ncurses.html'
 license=('MIT')
-source=(ftp://invisible-island.net/ncurses/ncurses-${_pkgver/_/-}.tar.gz
-	new_gcc_patch)
+source=(https://ftp.gnu.org/gnu/ncurses/ncurses-5.9.tar.gz
+	new_gcc_patch
+	0001-Fix-errors-in-type-conversion.patch)
+
 md5sums=('8cb9c412e5f2d96bc6f459aa8c6282a1'
-         'fd12252672685658f8ca479ab7dfbd89')
+         'fd12252672685658f8ca479ab7dfbd89'
+         'c4518e36e8600f461cc6ddd07aa3c75d')
 
 prepare() {
   cd $pkgname-${_pkgver}
   patch -Np1 < ../new_gcc_patch
+  patch -Np1 < ../0001-Fix-errors-in-type-conversion.patch
 }
 
 build() {
   cd $pkgname-${_pkgver}
-
   DEFAULTS="--prefix=/usr
             --disable-static \
             --without-debug \
