@@ -1,8 +1,8 @@
 pkgname=gcc-new
-pkgver=7.1.1
+pkgver=7.2.0
 _pkgver=${pkgver:0:1}
-pkgrel=5
-_commit=d791474f3fc2133fa0c310e566988b0cbdff321e
+pkgrel=1
+_commit=1bd23ca8c30f4827c4bea23deedf7ca33a86ffb5
 pkgdesc="The GNU Compiler Collection"
 license=('GPL' 'LGPL' 'FDL' 'custom')
 url="http://gcc.gnu.org"
@@ -35,7 +35,7 @@ build() {
   (
   # Use the ARM compiler for gcc. :(
   # subshell so we dont effect the path for the rest of makepnd
-  export PATH="$(echo $PATH | sed 's/-x64//')"
+  export PATH=${PATH/-x64/}
 
   ${srcdir}/gcc/configure --prefix=/usr/ngcc \
       --enable-languages=c,c++ \
