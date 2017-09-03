@@ -1,7 +1,7 @@
 # Maintainer: Jari Vetoniemi <mailRoxas@gmail.com>
 
 pkgname=makepnd
-pkgver=r32.4422a71
+pkgver=r34.ac38373
 pkgrel=1
 pkgdesc='Scripts for creating PND packages from recipe'
 url='https://github.com/Cloudef/makepnd'
