@@ -1,0 +1,20 @@
+pkgname=fig2dev
+pkgver=3.2.6
+pkgrel=1
+pkgdesc="Format conversion utility that can be used with xfig"
+url="http://mcj.sourceforge.net/"
+depends=('libxpm4')
+source=(http://downloads.sourceforge.net/mcj/${pkgname}-${pkgver}.tar.xz)
+sha1sums=('0835c4dc9e69e923cb9e0dceacd292e261bb8137')
+
+build() {
+  cd ${pkgname}-${pkgver}
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  make DESTDIR="${pkgdir}" MANPATH=/usr/share/man \
+    install
+}
