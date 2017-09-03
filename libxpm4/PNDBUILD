@@ -1,0 +1,25 @@
+pkgname=('libxpm4' 'libxpm-dev')
+pkgver=3.5.12
+pkgrel=2
+epoch=1
+pkgdesc="X11 pixmap library"
+url="http://xorg.freedesktop.org/"
+depends=('libxt6' 'libxext6')
+makedepends=('libxt-dev' 'libxext-dev')
+source=(${url}/releases/individual/lib/libXpm-${pkgver}.tar.bz2)
+sha256sums=('fd6a6de3da48de8d1bb738ab6be4ad67f7cb0986c39bd3f7d51dd24f7854bdec')
+
+build() {
+  cd "${srcdir}/libXpm-${pkgver}"
+  ./configure --prefix=/usr --sysconfdir=/etc --disable-static
+  make
+}
+
+package_libxpm4() {
+  cd "${srcdir}/libXpm-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+}
+
+package_libxpm-dev() {
+	echo "Empty."
+}
