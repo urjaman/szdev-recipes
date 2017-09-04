@@ -1,0 +1,30 @@
+pkgname=netpbm
+pkgver=10.47.65
+pkgrel=1
+pkgdesc='A toolkit for manipulation of graphic images'
+url='http://netpbm.sourceforge.net/'
+license=('custom' 'BSD' 'GPL' 'LGPL')
+source=("http://downloads.sourceforge.net/${pkgname}/super_stable/${pkgver}/netpbm-${pkgver}.tgz"
+	config.mk)
+md5sums=('a2106da73f14a48a2956b21a55beefd1'
+         '1c3b5db7e49623633aeedf495877693c')
+
+build() {
+  cd ${pkgname}-${pkgver}
+  cp ../config.mk .
+  unset MAKEFLAGS
+  make
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  unset MAKEFLAGS
+  rm -r ${pkgdir}
+  make install-run install-dev pkgdir=${pkgdir}/usr PKGMANDIR=share/man
+  rm -r ${pkgdir}/usr/share/man
+  mv ${pkgdir}/usr/link/* ${pkgdir}/usr/lib/
+  rm -r ${pkgdir}/usr/link
+}
+
+md5sums=('a2106da73f14a48a2956b21a55beefd1'
+         '646419c392b9c4ae548aa58f94f836bb')
