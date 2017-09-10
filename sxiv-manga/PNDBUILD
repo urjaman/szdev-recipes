@@ -1,6 +1,6 @@
 _pkgname=sxiv
 pkgname=$_pkgname-manga
-pkgver=20141024.480
+pkgver=r482.v1.1.119gc07a870
 pkgrel=1
 pkgdesc="Simple (or small or suckless) X Image Viewer"
 arch=('i686' 'x86_64')
@@ -21,7 +21,7 @@ md5sums=('SKIP')
 
 pkgver() {
   cd "$srcdir/$_pkgname"
-  echo "$(git log -1 --format="%cd" --date=short | sed 's|-||g').$(git rev-list --count master)"
+  printf 'r%s.%s' "$(git rev-list --count HEAD)" "$(git describe --always | sed 's|-||g')"
 }
 
 prepare() {
