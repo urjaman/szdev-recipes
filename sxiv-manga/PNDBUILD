@@ -1,3 +1,6 @@
+# Could be build as pnd, but doesn't make much sense as the program takes
+# image files or directory as argument. And PND's are PITA to associate with DE.
+
 _pkgname=sxiv
 pkgname=$_pkgname-manga
 pkgver=r482.v1.1.119gc07a870
