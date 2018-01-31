@@ -1,0 +1,54 @@
+# Maintainer: Kevin Whitaker <eyecreate@gmail.com>
+
+pkgname=TIC-80
+pkgver=0.60.3
+pkgrel=1
+pkgdesc='TIC-80 is a fantasy computer for making, playing and sharing tiny games.'
+pndcategory='Development/IDE'
+pndicon=('logo64.png')
+pndauthor='eyecreate'
+pndexec=('./tic80')
+pndclockspeed=900
+pndrelease=beta
+url='https://tic.computer'
+license=('MIT')
+makedepend=('libgles-omap3-es23-dev')
+source=('gtk2.patch' 'keys.patch' 'git+git://github.com/nesbox/TIC-80.git' 'git+git://github.com/ptitSeb/SDL2.git')
+
+prepare() {
+  cd TIC-80
+  git checkout 6cc4560cdc2781a445be274d7c520eed8b4eb264
+  git submodule update --init --recursive
+  patch < ../gtk2.patch
+  cd src
+  patch < ../../keys.patch
+}
+
+build() {
+  #Make 3rd-party libs
+  mkdir TIC-80/3rd-party/pre-built/openpandora
+  mkdir TIC-80/3rd-party/pre-built/openpandora-includes
+  #Make lua
+  cd "$srcdir"/TIC-80/3rd-party/lua-5.3.1
+  make linux
+  cp src/liblua.a ../pre-built/openpandora/liblua5.3.a
+  #Make sdl2
+  cd "$srcdir"/SDL2
+  mkdir buildout
+  CFLAGS='-DPANDORA -D_USE_MATH_DEFINES' ./configure --disable-video-vulkan --disable-video-opengles2 --enable-static --prefix="$srcdir"/SDL2/buildout
+  make install
+  cp buildout/lib/libSDL2.a "$srcdir"/TIC-80/3rd-party/pre-built/openpandora/libSDL2.a
+  cp -r buildout/include/SDL2/* "$srcdir"/TIC-80/3rd-party/pre-built/openpandora-includes
+  #Make TIC-80
+  cd "$srcdir"/TIC-80
+  make linux
+}
+
+package() {
+  cd TIC-80/bin
+  cp -r * ${pkgdir}
+  cd ../
+  cp docs/logo/logo64.png ${pkgdir}
+}
+
+md5sums=('df2293b97d42a14965bd78b942b67fbf' '06d8bf24f05497d00e0c44a66305a8f4' 'SKIP' 'SKIP')

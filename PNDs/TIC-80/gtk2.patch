@@ -1,0 +1,35 @@
+diff --git a/Makefile b/Makefile
+index 0ad4e13..437b586 100644
+--- a/Makefile
++++ b/Makefile
+@@ -16,7 +16,7 @@ INCLUDES= \
+ 	-I$(3RD_PARTY)/lua-5.3.1/src \
+ 	-I$(3RD_PARTY)/zlib-1.2.8 \
+ 	-I$(3RD_PARTY)/giflib-5.1.4/lib \
+-	-I$(3RD_PARTY)/SDL2-2.0.7/include \
++	-I$(3RD_PARTY)/pre-built/openpandora-includes \
+ 	-I$(3RD_PARTY)/moonscript \
+ 	-I$(BLIPBUF_LIB) \
+ 	-I$(DUKTAPE_LIB) \
+@@ -35,16 +35,16 @@ MINGW_LINKER_FLAGS= \
+ 	-lws2_32 \
+ 	-mwindows
+ 
+-GTK_INCLUDES= `pkg-config --cflags gtk+-3.0`
+-GTK_LIBS= `pkg-config --libs gtk+-3.0`
++GTK_INCLUDES= `pkg-config --cflags gtk+-2.0`
++GTK_LIBS= `pkg-config --libs gtk+-2.0`
+ 
+ LINUX_INCLUDES= \
+-	$(GTK_INCLUDES) \
+-	`sdl2-config --cflags`
++	$(GTK_INCLUDES)
+ 
+ LINUX_LIBS= \
+ 	$(GTK_LIBS) \
+-	`sdl2-config --static-libs`
++	-L$(PRE_BUILT)/openpandora \
++	-lSDL2
+ 
+ LINUX64_LIBS= \
+ 	$(LINUX_LIBS) \
