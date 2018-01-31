@@ -1,0 +1,19 @@
+diff --git a/src/studio.c b/src/studio.c
+index 00c07e3..f5682c9 100644
+--- a/src/studio.c
++++ b/src/studio.c
+@@ -276,10 +276,10 @@ static struct
+ 		SDL_SCANCODE_LEFT,
+ 		SDL_SCANCODE_RIGHT,
+ 
+-		SDL_SCANCODE_Z, // a
+-		SDL_SCANCODE_X, // b
+-		SDL_SCANCODE_A, // x
+-		SDL_SCANCODE_S, // y
++		SDL_SCANCODE_HOME, // a z
++		SDL_SCANCODE_END, // b x
++		SDL_SCANCODE_PAGEDOWN, // x a
++		SDL_SCANCODE_PAGEUP, // y s
+ 
+ 		0, 0, 0, 0, 0, 0, 0, 0,
+ 	},
