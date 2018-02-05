@@ -2,7 +2,7 @@
 
 pkgname=TIC-80
 pkgver=0.60.3
-pkgrel=1
+pkgrel=2
 pkgdesc='TIC-80 is a fantasy computer for making, playing and sharing tiny games.'
 pndcategory='Development/IDE'
 pndicon=('logo64.png')
@@ -13,7 +13,7 @@ pndrelease=beta
 url='https://tic.computer'
 license=('MIT')
 makedepend=('libgles-omap3-es23-dev')
-source=('gtk2.patch' 'keys.patch' 'git+git://github.com/nesbox/TIC-80.git' 'git+git://github.com/ptitSeb/SDL2.git')
+source=('gtk2.patch' 'keys.patch' 'sdl.patch' 'git+git://github.com/nesbox/TIC-80.git' 'git+git://github.com/ptitSeb/SDL2.git')
 
 prepare() {
   cd TIC-80
@@ -22,6 +22,7 @@ prepare() {
   patch < ../gtk2.patch
   cd src
   patch < ../../keys.patch
+  patch < ../../sdl.patch
 }
 
 build() {
@@ -51,4 +52,4 @@ package() {
   cp docs/logo/logo64.png ${pkgdir}
 }
 
-md5sums=('df2293b97d42a14965bd78b942b67fbf' '06d8bf24f05497d00e0c44a66305a8f4' 'SKIP' 'SKIP')
+md5sums=('df2293b97d42a14965bd78b942b67fbf' '06d8bf24f05497d00e0c44a66305a8f4' '62ed600b72efd165adedb8ae5b50f3da' 'SKIP' 'SKIP')

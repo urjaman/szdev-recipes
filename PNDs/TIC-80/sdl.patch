@@ -1,0 +1,20 @@
+diff --git a/src/studio.c b/src/studio.c
+index 00c07e3..de1be64 100644
+--- a/src/studio.c
++++ b/src/studio.c
+@@ -2699,11 +2699,11 @@ static void onFSInitialized(FileSystem* fs)
+ 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK);
+ 
+ 	studio.window = SDL_CreateWindow( TIC_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+-		(TIC80_FULLWIDTH) * STUDIO_UI_SCALE,
+-		(TIC80_FULLHEIGHT) * STUDIO_UI_SCALE,
++		800,
++		480,
+ 		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+-#if defined(__CHIP__)
+-			| SDL_WINDOW_FULLSCREEN_DESKTOP
++#if defined(__CHIP__) || defined(PANDORA)
++			| SDL_WINDOW_FULLSCREEN
+ #endif
+ 		);
+ 
