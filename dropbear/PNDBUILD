@@ -1,5 +1,5 @@
 pkgname=dropbear
-pkgver=2017.75
+pkgver=2022.83
 pkgrel=1
 pkgdesc="Lightweight replacement for sshd"
 url="http://matt.ucc.asn.au/dropbear/dropbear.html"
@@ -7,8 +7,8 @@ license=('MIT')
 source=(https://matt.ucc.asn.au/$pkgname/releases/$pkgname-$pkgver.tar.bz2
 	dropbear.init
 	dropbear.default)
-sha256sums=('6cbc1dcb1c9709d226dff669e5604172a18cf5dbf9a201474d5618ae4465098c'
-		SKIP SKIP )
+sha256sums=('bc5a121ffbc94b5171ad5ebe01be42746d50aa797c9549a4639894a16749443b'
+            SKIP SKIP)
 
 build() {
   cd $pkgname-$pkgver
